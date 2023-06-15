@@ -33,3 +33,5 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::resource('/notes', App\Http\Controllers\NoteController::class);
