@@ -19,6 +19,9 @@ defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+
+                    <Link :href="route('notes.create')" class="btn-link btn-lg mb-2">+ New Notes</Link>
+
                     <div v-if="notes.data.length > 0">
                         <div
                             v-for="note in notes.data"
@@ -29,7 +32,7 @@ defineProps({
                                 {{ note.title }}
                             </h2>
                             <p class="mt-2">
-                                {{ note.text }}
+                                {{ note.text.length > 200 ? note.text.substring(0, 200) : note.text }}
                             </p>
                             <span class="block mt-4 text-sm opacity-70">
                                 {{ note.updated_at }}
@@ -73,7 +76,7 @@ defineProps({
                     :href="page.url"
                     class="block h-8 rounded border text-center leading-8 text-gray-900"
                     :class="[
-                            page.active ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-100 bg-white text-gray-900',
+                            page.active ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-gray-100 bg-white text-gray-900',
                             page.label.length > 4 ? 'hidden' : 'w-8'
                             ]
                     "

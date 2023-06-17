@@ -23,7 +23,7 @@ defineProps({
             </template>
         </div>
         <h1 class="text-5xl">
-            Hi
+            Welcome to LiteNote
         </h1>
     </div>
 </template>

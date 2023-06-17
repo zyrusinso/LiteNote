@@ -20,7 +20,7 @@ class NoteController extends Controller
     {
         $notes = Note::where('user_id', auth()->id())
                     ->latest('updated_at')
-                    ->paginate(2);
+                    ->paginate(3);
         $updatedNotes = $this->transformData($notes);
 
         return Inertia::render('Notes/Index', [
@@ -65,7 +65,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Notes/Create');
     }
 
     /**
@@ -76,7 +76,18 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:120',
+            'text' => 'required' 
+        ]);
+
+        Note::create([
+            'user_id' => auth()->id(),
+            'title' => $request->title,
+            'text' => $request->text,
+        ]);
+
+        return to_route('notes.index');
     }
 
     /**
