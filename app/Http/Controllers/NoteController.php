@@ -18,37 +18,44 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::where('user_id', auth()->id())->latest('updated_at')->get();
+        $notes = Note::where('user_id', auth()->id())
+                    ->latest('updated_at')
+                    ->paginate(2);
+        $updatedNotes = $this->transformData($notes);
+
         return Inertia::render('Notes/Index', [
-            'notes' => $this->transformData($notes),
+            'notes' => $updatedNotes,
         ]);
     }
 
-    public function transformData($data)
+    public function transformData($notes)
     {
-        $updatedData = new Collection();
-        foreach($data as $item){
-            $updatedData->push([
-                'id' => $item->id,
-                'user' => $this->getUserData($item->user_id),
-                'title' => $item->title,
-                'text' => $item->text,
-                'updated_at' => Carbon::parse($item->updated_at)->diffForHumans()
-            ]);
-        }
-        return $updatedData;
+        $updatedNotes =  $notes->getCollection()->map(function ($note) {
+            return $this->transformNoteData($note);
+        });
+        return $notes->setCollection($updatedNotes);
+    }
+
+    public function transformNoteData($note)
+    {
+        return [
+            'id' => $note->id,
+            'user' => $this->getUserData($note->user_id),
+            'title' => $note->title,
+            'text' => $note->text,
+            'updated_at' => Carbon::parse($note->updated_at)->diffForHumans()
+        ];
     }
 
     public function getUserData($id)
     {
-        $user = User::where('id', $id)->first();
+        $user = User::findOrFail($id);
         
-        $data = [
+        return [
             'name' => $user->name,
             'email' => $user->email,
             'updated_at' => $user->updated_at
         ];
-        return $data;
     }
 
     /**
