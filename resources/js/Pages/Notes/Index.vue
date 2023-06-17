@@ -9,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-    <AppLayout title="Notes">
+    <AppLayout title="">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 All Notes
@@ -71,7 +71,7 @@ defineProps({
             <li v-for="page in notes.links" :key="page.url">
                 <Link
                     :href="page.url"
-                    class="block h-8 rounded border bg-white text-center leading-8 text-gray-900"
+                    class="block h-8 rounded border text-center leading-8 text-gray-900"
                     :class="[
                             page.active ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-100 bg-white text-gray-900',
                             page.label.length > 4 ? 'hidden' : 'w-8'
