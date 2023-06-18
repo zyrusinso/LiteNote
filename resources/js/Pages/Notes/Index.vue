@@ -18,10 +18,10 @@ defineProps({
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                
+                <Link :href="route('notes.create')" class="btn-link btn-lg mb-2">+ New Notes</Link>
+
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-
-                    <Link :href="route('notes.create')" class="btn-link btn-lg mb-2">+ New Notes</Link>
-
                     <div v-if="notes.data.length > 0">
                         <div
                             v-for="note in notes.data"
@@ -29,7 +29,7 @@ defineProps({
                             class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg"
                         >
                             <h2 class="font-bold text-2xl">
-                                {{ note.title }}
+                                <Link :href="route('notes.show', note.id)">{{ note.title }}</Link>
                             </h2>
                             <p class="mt-2">
                                 {{ note.text.length > 200 ? note.text.substring(0, 200) : note.text }}

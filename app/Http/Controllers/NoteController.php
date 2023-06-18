@@ -43,6 +43,7 @@ class NoteController extends Controller
             'user' => $this->getUserData($note->user_id),
             'title' => $note->title,
             'text' => $note->text,
+            'created_at' => Carbon::parse($note->created_at)->diffForHumans(),
             'updated_at' => Carbon::parse($note->updated_at)->diffForHumans()
         ];
     }
@@ -98,7 +99,11 @@ class NoteController extends Controller
      */
     public function show($id)
     {
-        //
+        $note = Note::where('id', $id)->firstOrFail();
+
+        return Inertia::render('Notes/Show', [
+            'note' => $this->transformNoteData($note)
+        ]);
     }
 
     /**
