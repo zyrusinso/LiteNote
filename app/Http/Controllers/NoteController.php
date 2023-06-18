@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Note;
 use App\Models\User;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -40,6 +41,7 @@ class NoteController extends Controller
     {
         return [
             'id' => $note->id,
+            'uuid' => $note->uuid,
             'user' => $this->getUserData($note->user_id),
             'title' => $note->title,
             'text' => $note->text,
@@ -83,6 +85,7 @@ class NoteController extends Controller
         ]);
 
         Note::create([
+            'uuid' => Str::uuid(),
             'user_id' => auth()->id(),
             'title' => $request->title,
             'text' => $request->text,
@@ -97,9 +100,9 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uuid)
     {
-        $note = Note::where('id', $id)->firstOrFail();
+        $note = Note::where('uuid', $uuid)->firstOrFail();
 
         return Inertia::render('Notes/Show', [
             'note' => $this->transformNoteData($note)

@@ -29,10 +29,10 @@ defineProps({
                             class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg"
                         >
                             <h2 class="font-bold text-2xl">
-                                <Link :href="route('notes.show', note.id)">{{ note.title }}</Link>
+                                <Link :href="route('notes.show', note.uuid)">{{ note.title }}</Link>
                             </h2>
                             <p class="mt-2">
-                                {{ note.text.length > 200 ? note.text.substring(0, 200) : note.text }}
+                                {{ note.text.length > 200 ? note.text.substring(0, 200) + '...' : note.text }}
                             </p>
                             <span class="block mt-4 text-sm opacity-70">
                                 {{ note.updated_at }}
@@ -48,7 +48,7 @@ defineProps({
 
         <!-- Paginator -->
 
-        <ol class="flex justify-center gap-1 text-xs font-medium">
+        <ol v-if="notes.length > 0" class="flex justify-center gap-1 text-xs font-medium">
             <li v-if="notes.prev_page_url">
                 <Link
                     :href="notes.prev_page_url"
