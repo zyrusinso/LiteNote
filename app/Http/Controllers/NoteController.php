@@ -100,9 +100,11 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($uuid)
+    public function show(Note $note)
     {
-        $note = Note::where('uuid', $uuid)->firstOrFail();
+        if($note->user_id != auth()->id()){
+            return abort(403);
+        }
 
         return Inertia::render('Notes/Show', [
             'note' => $this->transformNoteData($note)
@@ -115,9 +117,15 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Note $note)
     {
-        //
+        if($note->user_id != auth()->id()){
+            return abort(403);
+        }
+
+        return Inertia::render('Notes/Edit', [
+            'note' => $this->transformNoteData($note)
+        ]);
     }
 
     /**
@@ -127,9 +135,23 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Note $note, Request $request)
     {
-        //
+        if($note->user_id != auth()->id()){
+            return abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|max:120',
+            'text' => 'required' 
+        ]);
+
+        $note->update([
+            'title' => $request->title,
+            'text' => $request->text,
+        ]);
+
+        return to_route('notes.show', $note);
     }
 
     /**
@@ -138,8 +160,14 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Note $note)
     {
-        //
+        if($note->user_id != auth()->id()){
+            return abort(403);
+        }
+
+        $note->delete();
+
+        return to_route('notes.index');
     }
 }
