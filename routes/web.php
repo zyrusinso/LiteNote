@@ -34,4 +34,10 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::resource('/notes', App\Http\Controllers\NoteController::class);
+Route::middleware('auth')->group(function () {
+    Route::get('/notes/trashed', [App\Http\Controllers\TrashedNoteController::class, 'index'])->name('trashed.index');
+    Route::get('/notes/trashed/{note}', [App\Http\Controllers\TrashedNoteController::class, 'show'])->withTrashed()->name('trashed.show');
+    Route::get('/notes/trashed/{note}', [App\Http\Controllers\TrashedNoteController::class, 'update'])->withTrashed()->name('trashed.update');
+    
+    Route::resource('/notes', App\Http\Controllers\NoteController::class);
+});

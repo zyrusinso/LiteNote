@@ -15,7 +15,7 @@ function deleteNote()
 {
     Swal.fire({
         title: 'Are you sure?',
-        text: 'You can\'t revert your action',
+        text: 'This note will be moved into a trash!',
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes Delete it!',
@@ -43,10 +43,19 @@ function deleteNote()
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-10">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex">
-                    <p class="opacity-60">
+                <div v-if="$page.props.flash.message" class="mb-4 px-4 py-2 bg-green-100 border border-green-200 text-green-700 rounded-md">
+                    {{ $page.props.flash.message }}
+                </div>
+
+                <div class="flex" v-if="route().current('notes.index')">
+                    <a
+                        :href="route('notes.index')"
+                        class="btn btn-danger"
+                        >Back</a
+                    >
+                    <p class="opacity-60 ml-auto">
                         <strong>Created:</strong> {{ note.created_at }}
                     </p>
                     <p class="opacity-60 ml-8">
@@ -59,7 +68,29 @@ function deleteNote()
                     >
                     <form @submit.prevent="deleteNote">
                         <button type="submit" class="btn btn-danger ml-4">
-                            Delete Note
+                            Move to trash
+                        </button>
+                    </form>
+                </div>
+
+                <div class="flex" v-if="route().current('trashed.index')">
+                    <p class="opacity-60 ml-auto">
+                        <strong>Deleted at:</strong> {{ note.deleted_at }}
+                    </p>
+                    <a
+                        :href="route('notes.edit', note)"
+                        class="btn-link ml-auto"
+                        >Edit Note</a
+                    >
+                    <form @submit.prevent="deleteNote">
+                        <button type="submit" class="btn-link ml-auto">
+                            Restore Note
+                        </button>
+                    </form>
+
+                    <form @submit.prevent="deleteNote">
+                        <button type="submit" class="btn btn-danger ml-4">
+                            Move to trash
                         </button>
                     </form>
                 </div>

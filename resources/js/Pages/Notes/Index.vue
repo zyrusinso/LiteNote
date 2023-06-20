@@ -11,15 +11,21 @@ defineProps({
 <template>
     <AppLayout title="">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 v-if="route().current('notes.index')" class="font-semibold text-xl text-gray-800 leading-tight">
                 All Notes
+            </h2>
+
+            <h2 v-if="route().current('trashed.index')" class="font-semibold text-xl text-gray-800 leading-tight">
+                Trash
             </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                
-                <Link :href="route('notes.create')" class="btn-link btn-lg mb-2">+ New Notes</Link>
+                <div v-if="$page.props.flash.message" class="mb-4 px-4 py-2 bg-green-100 border border-green-200 text-green-700 rounded-md">
+                    {{ $page.props.flash.message }}
+                </div>
+                <Link v-if="route().current('notes.index')" :href="route('notes.create')" class="btn-link btn-lg mb-2">+ New Notes</Link>
 
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div v-if="notes.data.length > 0">
@@ -40,7 +46,8 @@ defineProps({
                         </div>
                     </div>
                     <div v-else class="text-center text-2xl font-bold">
-                        <p>You have no Notes yet!</p>
+                        <p v-if="route().current('notes.index')">You have no Notes yet!</p>
+                        <p v-if="route().current('trashed.index')">No item in the Trash!</p>
                     </div>
                 </div>
             </div>
